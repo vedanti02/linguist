@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "142702652646",
+    "firebase_url": "https://linguistsample.firebaseio.com",
+    "project_id": "linguistsample",
+    "storage_bucket": "linguistsample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142702652646:android:4d9f758738e5e5a1969f27",
+        "android_client_info": {
+          "package_name": "com.example.linguist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "142702652646-7firshfmi9rg32afaohldmuphu0jgqem.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHSS-RlGUTi-W2itkWpAHVfrWZQiu-PHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "142702652646-7firshfmi9rg32afaohldmuphu0jgqem.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
