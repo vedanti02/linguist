@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:linguist/constants.dart';
@@ -17,26 +17,73 @@ class _CameraState extends State<Camera> {
   File ImageFile;
   bool isImage = false;
   var picture;
+  var cropped;
 
   void initstate() {
     _showChoiceDialogue(context);
     super.initState();
   }
+  Future<void> _cropImage(picture) async{
+    cropped= await ImageCropper.cropImage(
+        sourcePath: picture.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: TextColor,
+            toolbarWidgetColor: Colors.white,
+            activeControlsWidgetColor: TextColor,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+      if(cropped!= null){
+        setState(() {
+          ImageFile= cropped;
+          isImage= true;
+        });
+
+
+    }
+
+
+  }
+
 
   Future _openCamera(BuildContext context) async {
     picture = await ImagePicker.pickImage(source: ImageSource.camera);
-    this.setState(() {
-      ImageFile = picture;
-      isImage = true;
-    });
+    if(picture!= null){
+      this.setState(() {
+        _cropImage(picture);
+      });
+    }
+
   }
 
   Future _openGallery(BuildContext context) async {
     picture = await ImagePicker.pickImage(source: ImageSource.gallery);
-    this.setState(() {
-      ImageFile = picture;
-      isImage = true;
-    });
+    if(picture!=null) {
+      this.setState(() {
+        _cropImage(picture);
+      });
+    }
   }
 
   Future readText() async {
@@ -60,7 +107,7 @@ class _CameraState extends State<Camera> {
   Future<void> _showChoiceDialogue(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (BuildContextcontext) {
+        builder: (BuildContext context) {
           return AlertDialog(
               content: SingleChildScrollView(
             child: ListBody(
@@ -98,12 +145,12 @@ class _CameraState extends State<Camera> {
             isImage
                 ? Center(
                     child: Container(
-                      height: 300.0,
                       width: 300.0,
+                      height: 300.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
                         image: FileImage(ImageFile),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fitWidth,
                       )),
                     ),
                   )
