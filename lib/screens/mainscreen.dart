@@ -22,8 +22,10 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
+
               child: Text('Offline Languages'),
               decoration: BoxDecoration(color: Colors.blue),
+
             ),
             tile(
               language: 'English',

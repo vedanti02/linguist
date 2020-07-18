@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_mlkit_language/firebase_mlkit_language.dart';
 
@@ -9,10 +11,29 @@ class tile extends StatefulWidget {
   tile({@required this.language, @required this.languageCode});
 
   @override
-  _tileState createState() => _tileState();
+  _tileState createState() => new _tileState();
 }
 
-class _tileState extends State<tile> {
+
+class _tileState extends State<tile> with TickerProviderStateMixin{
+  int _state=0;
+
+
+  void animateButton(){
+    setState(() {
+      _state=1;
+    });
+    Timer(Duration(milliseconds: 3300),(){
+      setState(() {
+        _state=2;
+      });
+
+  });
+}
+
+
+
+
   final ModelManager modelManager = FirebaseLanguage.instance.modelManager();
   bool downloadState = false;
   String currentStatus;
@@ -25,6 +46,20 @@ class _tileState extends State<tile> {
         downloadState = true;
         break;
       }
+    }
+  }
+
+  Widget trail_icon(){
+    if(_state==0){
+      return Icon(Icons.arrow_downward);
+    }
+    else if (_state==1){
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    }
+    else{
+      return Icon(Icons.delete);
     }
   }
 
@@ -44,6 +79,9 @@ class _tileState extends State<tile> {
       ),
       //trailing: Icon(Icons.arrow_downward),
       onTap: () async {
+        if (_state==0){
+          animateButton();
+        }
         if (downloadState == false) {
           currentStatus = await modelManager.downloadModel(widget.languageCode);
           print('downloading ... $currentStatus');
@@ -52,13 +90,18 @@ class _tileState extends State<tile> {
           print('deleting ... $currentStatus');
         }
         setState(() {
-          if (currentStatus != null) downloadState = !downloadState;
+          downloadState = !downloadState;
         });
       },
-      trailing: Icon(
-        downloadState ? Icons.delete : Icons.arrow_downward,
-        color: downloadState ? Colors.black : Colors.blue,
-      ),
+
+
+
+//      trailing: Icon(
+//        downloadState ? Icons.delete : Icons.arrow_downward,
+//        color: downloadState ? Colors.black : Colors.blue,
+
     );
+
   }
+
 }
