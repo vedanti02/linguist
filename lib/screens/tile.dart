@@ -15,7 +15,7 @@ class tile extends StatefulWidget {
 class _tileState extends State<tile> {
   final ModelManager modelManager = FirebaseLanguage.instance.modelManager();
   bool downloadState = false;
-
+  String currentStatus;
   Future<void> checkStatus(String langCode) async {
     bool status = false;
     List<String> downloadedList = await modelManager.viewModels();
@@ -43,16 +43,16 @@ class _tileState extends State<tile> {
         style: downloadState ? offline : online,
       ),
       //trailing: Icon(Icons.arrow_downward),
-      onTap: () {
+      onTap: () async {
         if (downloadState == false) {
-          modelManager.downloadModel(widget.languageCode);
-          print('downloading');
+          currentStatus = await modelManager.downloadModel(widget.languageCode);
+          print('downloading ... $currentStatus');
         } else {
-          modelManager.deleteModel(widget.languageCode);
-          print('deleting');
+          currentStatus = await modelManager.deleteModel(widget.languageCode);
+          print('deleting ... $currentStatus');
         }
         setState(() {
-          downloadState = !downloadState;
+          if (currentStatus != null) downloadState = !downloadState;
         });
       },
       trailing: Icon(
